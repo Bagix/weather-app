@@ -6,10 +6,10 @@ const store = useWeatherStore()
 </script>
 
 <template>
-  <div class="container">
-    <LocationInput />
+  <LocationInput />
+  <div class="container" :class="{ 'show-up': !store.error && store.currentWeather }">
     <div v-if="store.location" class="location">
-      <p>{{ store.location.name }} / {{ store.location.country }}</p>
+      <p>Contry: {{ store.location.country }}</p>
     </div>
     <div v-if="store.currentWeather" class="weather">
       <img :src="store.currentWeather.condition.icon" />
@@ -23,6 +23,17 @@ const store = useWeatherStore()
   width: 100%;
   max-width: 1366px;
   margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.2s linear 0.3s;
+
+  &.show-up {
+    opacity: 1;
+  }
 }
 
 .location,
