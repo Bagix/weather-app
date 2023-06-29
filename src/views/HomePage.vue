@@ -29,7 +29,7 @@ const store = useWeatherStore()
   justify-content: center;
   flex-direction: column;
   opacity: 0;
-  transition: opacity 0.2s linear 0.3s;
+  transition: opacity 0.2s ease-out 0.3s;
 
   &.show-up {
     opacity: 1;

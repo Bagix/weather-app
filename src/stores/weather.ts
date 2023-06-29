@@ -10,9 +10,20 @@ export const useWeatherStore = defineStore('weather', () => {
   const location = computed(
     (): IWeatherLocation | null => currentWeatherData.value?.location ?? null
   )
+
   const currentWeather = computed(
     (): ICurrentWeather | null => currentWeatherData.value?.current ?? null
   )
+
+  const weatherCodeClass = computed((): string => {
+    const code = currentWeather?.value?.condition.code.toString() ?? ''
+
+    if (!code) {
+      return ''
+    }
+
+    return `weather-${code}`
+  })
 
   async function setCurrentWeather(city: string) {
     try {
@@ -24,18 +35,15 @@ export const useWeatherStore = defineStore('weather', () => {
 
       const data = await response.json()
 
-      console.log(data)
-
       if (!response.ok) {
         throw new Error(data.error.message)
       }
 
       currentWeatherData.value = data
     } catch (e) {
-      console.log(e)
       error.value = String(e)
     }
   }
 
-  return { currentWeather, location, setCurrentWeather, error }
+  return { currentWeather, location, setCurrentWeather, error, weatherCodeClass }
 })
