@@ -63,12 +63,13 @@ async function checkWeather(): Promise<void> {
   justify-content: center;
   width: 100%;
   padding-top: 20px;
-  min-height: 100vh;
-  transition: all 0.2s linear;
+  height: 60px;
+  transition: transform 0.3s linear;
   z-index: 10;
+  transform: translateY(calc(50vh - 60px));
 
   &.show-up {
-    min-height: 60px;
+    transform: translateY(0);
 
     .input {
       border-bottom: none;

@@ -7,15 +7,17 @@ const store = useWeatherStore()
 
 <template>
   <LocationInput />
-  <div class="container" :class="{ 'show-up': !store.error && store.currentWeather }">
-    <div v-if="store.location" class="location">
-      <p>Contry: {{ store.location.country }}</p>
+  <Transition name="fade">
+    <div v-if="!store.error && store.currentWeather" class="container">
+      <div v-if="store.location" class="location">
+        <p>Contry: {{ store.location.country }}</p>
+      </div>
+      <div v-if="store.currentWeather" class="weather">
+        <img :src="store.currentWeather.condition.icon" />
+        <p>{{ store.currentWeather.temp_c }} / {{ store.currentWeather.condition.text }}</p>
+      </div>
     </div>
-    <div v-if="store.currentWeather" class="weather">
-      <img :src="store.currentWeather.condition.icon" />
-      <p>{{ store.currentWeather.temp_c }} / {{ store.currentWeather.condition.text }}</p>
-    </div>
-  </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
@@ -28,16 +30,18 @@ const store = useWeatherStore()
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  opacity: 0;
-  transition: opacity 0.2s ease-out 0.3s;
-
-  &.show-up {
-    opacity: 1;
-  }
 }
 
 .location,
 .weather {
   text-align: center;
+}
+
+.fade-enter-active {
+  transition: opacity 0.3s ease-out 0.4s;
+}
+
+.fade-enter-from {
+  opacity: 0;
 }
 </style>

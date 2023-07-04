@@ -17,13 +17,5 @@ const store = useWeatherStore()
 .canvas {
   background-color: var(--color-background);
   transition: background-color 0.5s ease-out;
-
-  &.weather-1000 {
-    background-color: rgb(241, 198, 6);
-  }
-
-  &.weather-1003 {
-    background-color: rgb(221, 221, 125);
-  }
 }
 </style>
