@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useWeatherStore } from '@/stores/weather'
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
 
 const store = useWeatherStore()
-const city = ref<string>('')
+const { locationName } = storeToRefs(store)
+const place = ref<string>('')
 const isFocus = ref<boolean>(false)
 const input = ref()
 
@@ -12,7 +14,7 @@ function toggleFocus(value: boolean): void {
 }
 
 async function checkWeather(): Promise<void> {
-  if (city.value.length < 3) {
+  if (place.value.length < 3) {
     return
   }
 
@@ -20,15 +22,19 @@ async function checkWeather(): Promise<void> {
   const replacement = ['a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z']
 
   for (let i = 0; i < letters.length; ++i) {
-    city.value = city.value.replaceAll(letters[i], replacement[i])
+    place.value = place.value.replaceAll(letters[i], replacement[i])
   }
 
-  await store.setCurrentWeather(city.value)
+  await store.setCurrentWeather(place.value)
 
   if (!store.error) {
     input.value.blur()
   }
 }
+
+watch(locationName, (newValue: string) => {
+  place.value = newValue
+})
 </script>
 
 <template>
@@ -38,8 +44,8 @@ async function checkWeather(): Promise<void> {
         <input
           type="text"
           class="input"
-          name="city"
-          v-model="city"
+          name="place"
+          v-model="place"
           ref="input"
           @keydown.enter="checkWeather"
           @focus="toggleFocus(true)"

@@ -11,6 +11,8 @@ export const useWeatherStore = defineStore('weather', () => {
     (): IWeatherLocation | null => currentWeatherData.value?.location ?? null
   )
 
+  const locationName = computed((): string => currentWeatherData.value?.location?.name ?? '')
+
   const currentWeather = computed(
     (): ICurrentWeather | null => currentWeatherData.value?.current ?? null
   )
@@ -25,12 +27,12 @@ export const useWeatherStore = defineStore('weather', () => {
     return `weather-${code}`
   })
 
-  async function setCurrentWeather(city: string) {
+  async function setCurrentWeather(position: string) {
     try {
       error.value = ''
 
       const response = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=${config.api.key}&q=${city}`
+        `https://api.weatherapi.com/v1/current.json?key=${config.api.key}&q=${position}`
       )
 
       const data = await response.json()
@@ -45,5 +47,12 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
-  return { currentWeather, location, setCurrentWeather, error, weatherCodeClass }
+  return {
+    currentWeather,
+    location,
+    setCurrentWeather,
+    weatherCodeClass,
+    locationName,
+    error
+  }
 })
