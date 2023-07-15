@@ -46,7 +46,7 @@ function getForecast(): void {
   max-width: 1366px;
   padding: 0 16px;
   margin: 0 auto;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
