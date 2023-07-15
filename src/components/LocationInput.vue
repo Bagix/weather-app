@@ -18,8 +18,46 @@ async function checkWeather(): Promise<void> {
     return
   }
 
-  const letters = ['ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż']
-  const replacement = ['a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z']
+  const letters = [
+    'ą',
+    'ć',
+    'ę',
+    'ł',
+    'ń',
+    'ó',
+    'ś',
+    'ź',
+    'ż',
+    'Ą',
+    'Ć',
+    'Ę',
+    'Ł',
+    'Ń',
+    'Ó',
+    'Ś',
+    'Ź',
+    'Ż'
+  ]
+  const replacement = [
+    'a',
+    'c',
+    'e',
+    'l',
+    'n',
+    'o',
+    's',
+    'z',
+    'z',
+    'A',
+    'C',
+    'E',
+    'L',
+    'N',
+    'O',
+    'S',
+    'Z',
+    'Z'
+  ]
 
   for (let i = 0; i < letters.length; ++i) {
     place.value = place.value.replaceAll(letters[i], replacement[i])
