@@ -8,7 +8,7 @@ const store = useWeatherStore()
 
 async function setCurrentPosition(position: GeolocationPosition): Promise<void> {
   const positionString = `${position.coords.latitude},${position.coords.longitude}`
-  await store.setCurrentWeather(positionString)
+  await store.getCurrentWeather(positionString)
 }
 
 onMounted(() => {

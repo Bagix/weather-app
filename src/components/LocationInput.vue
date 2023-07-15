@@ -25,7 +25,7 @@ async function checkWeather(): Promise<void> {
     place.value = place.value.replaceAll(letters[i], replacement[i])
   }
 
-  await store.setCurrentWeather(place.value)
+  await store.getCurrentWeather(place.value)
 
   if (!store.error) {
     input.value.blur()
@@ -76,6 +76,7 @@ watch(locationName, (newValue: string) => {
 
   &.show-up {
     transform: translateY(0);
+    position: relative;
 
     .input {
       border-bottom: none;
@@ -84,7 +85,7 @@ watch(locationName, (newValue: string) => {
 }
 .input {
   background: transparent;
-  border-bottom: 1px solid #8f8f8f;
+  border-bottom: 1px solid darkslategrey;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -107,7 +108,7 @@ watch(locationName, (newValue: string) => {
     margin-top: -1px;
     height: 1px;
     width: 100%;
-    background: #fff;
+    background: darkslategrey;
     transform: scaleX(0);
     transform-origin: bottom center;
     transition: transform 0.25s linear;
@@ -126,7 +127,7 @@ watch(locationName, (newValue: string) => {
 .btn {
   margin-left: 15px;
   background: transparent;
-  border: 1px solid #8f8f8f;
+  border: 1px solid darkslategrey;
   font-size: 16px;
   color: #8f8f8f;
   transition: all 0.2s linear;
