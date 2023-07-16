@@ -74,12 +74,10 @@ function getForecast(): void {
   flex-direction: column;
   width: 100%;
   margin-top: 32px;
-  height: 552px;
   overflow: hidden;
 
   @media (min-width: 768px) {
     flex-direction: row;
-    height: 152px;
   }
 
   @media (min-width: 1366px) {
@@ -122,7 +120,6 @@ function getForecast(): void {
 @for $i from 1 through 3 {
   .drop-enter-active:nth-child(#{$i}n) {
     transition-delay: #{$i * 0.5}s;
-    z-index: 10 - $i;
   }
 }
 </style>
