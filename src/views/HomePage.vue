@@ -45,12 +45,15 @@ function getForecast(): void {
   width: 100%;
   max-width: 1366px;
   padding: 0 16px;
-  margin: 0 auto;
-  min-height: 100vh;
+  margin: 10vh auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  @media (min-width: 1366px) {
+    margin-top: 20vh;
+  }
 }
 
 .location,
@@ -77,6 +80,10 @@ function getForecast(): void {
   @media (min-width: 768px) {
     flex-direction: row;
     height: 152px;
+  }
+
+  @media (min-width: 1366px) {
+    margin-top: 15vh;
   }
 }
 
@@ -113,7 +120,7 @@ function getForecast(): void {
 }
 
 @for $i from 1 through 3 {
-  .daily-weather-card:nth-child(#{$i}n) {
+  .drop-enter-active:nth-child(#{$i}n) {
     transition-delay: #{$i * 0.5}s;
     z-index: 10 - $i;
   }
