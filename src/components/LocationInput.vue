@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { transformText } from '@/Utils'
 import { useWeatherStore } from '@/stores/weather'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
@@ -18,52 +19,7 @@ async function checkWeather(): Promise<void> {
     return
   }
 
-  const letters = [
-    'ą',
-    'ć',
-    'ę',
-    'ł',
-    'ń',
-    'ó',
-    'ś',
-    'ź',
-    'ż',
-    'Ą',
-    'Ć',
-    'Ę',
-    'Ł',
-    'Ń',
-    'Ó',
-    'Ś',
-    'Ź',
-    'Ż'
-  ]
-  const replacement = [
-    'a',
-    'c',
-    'e',
-    'l',
-    'n',
-    'o',
-    's',
-    'z',
-    'z',
-    'A',
-    'C',
-    'E',
-    'L',
-    'N',
-    'O',
-    'S',
-    'Z',
-    'Z'
-  ]
-
-  for (let i = 0; i < letters.length; ++i) {
-    place.value = place.value.replaceAll(letters[i], replacement[i])
-  }
-
-  await store.getCurrentWeather(place.value)
+  await store.getCurrentWeather(transformText(place.value))
 
   if (!store.error) {
     input.value.blur()
@@ -71,7 +27,9 @@ async function checkWeather(): Promise<void> {
 }
 
 watch(locationName, (newValue: string) => {
-  place.value = newValue
+  if (!place.value) {
+    place.value = newValue
+  }
 })
 </script>
 
@@ -100,21 +58,25 @@ watch(locationName, (newValue: string) => {
 
 <style lang="scss" scoped>
 .location-input {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  padding-top: 20px;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 20px 15px 0;
   height: 60px;
   transition: transform 0.3s linear;
   z-index: 10;
   transform: translateY(calc(50vh - 60px));
 
+  @media (min-width: 768px) {
+    max-width: 400px;
+  }
+
   &.show-up {
     transform: translateY(0);
-    position: relative;
 
     .input {
       border-bottom: none;
@@ -127,9 +89,15 @@ watch(locationName, (newValue: string) => {
   border-top: none;
   border-left: none;
   border-right: none;
-  font-size: 16px;
+  font-size: 20px;
   padding: 2px 10px;
   color: #fff;
+  max-width: 220px;
+
+  @media (min-width: 768px) {
+    font-size: 24px;
+    max-width: 250px;
+  }
 
   &:focus {
     outline: none;
@@ -146,7 +114,7 @@ watch(locationName, (newValue: string) => {
     margin-top: -1px;
     height: 1px;
     width: 100%;
-    background: darkslategrey;
+    background: #fff;
     transform: scaleX(0);
     transform-origin: bottom center;
     transition: transform 0.25s linear;
@@ -160,13 +128,14 @@ watch(locationName, (newValue: string) => {
 .wrapper {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .btn {
-  margin-left: 15px;
   background: transparent;
   border: 1px solid darkslategrey;
-  font-size: 16px;
+  font-size: 18px;
   color: #8f8f8f;
   transition: all 0.2s linear;
   cursor: pointer;

@@ -75,6 +75,7 @@ function getForecast(): void {
   width: 100%;
   margin-top: 32px;
   overflow: hidden;
+  padding: 15px 0;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -106,7 +107,7 @@ function getForecast(): void {
 }
 
 .drop-enter-from {
-  transform: translateY(-113%);
+  transform: translateY(-125%);
 }
 
 @media (max-width: 767px) {

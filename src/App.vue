@@ -24,7 +24,6 @@ onMounted(() => {
 
 <template>
   <div class="canvas" :class="store.weatherCodeClass">
-    <HomePage />
     <RouterView />
   </div>
 </template>
@@ -32,6 +31,5 @@ onMounted(() => {
 <style scoped lang="scss">
 .canvas {
   background-color: var(--color-background);
-  transition: background-color 0.5s ease-out;
 }
 </style>

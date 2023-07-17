@@ -7,13 +7,12 @@ defineProps<{
 
 function getDate(date: string): string {
   const newDate = new Date(date)
-
   return `${newDate.getDate()} ${newDate.toLocaleString('en-US', { month: 'short' })}`
 }
 </script>
 
 <template>
-  <div class="daily-weather-card">
+  <a :href="`./day/${dayilyWeather.date}`" class="daily-weather-card">
     <div class="date">{{ getDate(dayilyWeather.date) }}</div>
     <div class="icon">
       <img :src="dayilyWeather.day.condition.icon" />
@@ -21,7 +20,7 @@ function getDate(date: string): string {
     <div class="temp">
       {{ dayilyWeather.day.avgtemp_c }}/ {{ dayilyWeather.day.condition.text }}
     </div>
-  </div>
+  </a>
 </template>
 
 <style lang="scss" scoped>
@@ -38,9 +37,16 @@ function getDate(date: string): string {
   border-radius: 5px;
   transform: translateY(0);
   background: #000;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: box-shadow 0.2s linear;
 
   @media (min-width: 768px) {
     margin: 0 16px;
+  }
+
+  &:hover {
+    box-shadow: 0 0 4px 5px darkslategrey;
   }
 }
 </style>
