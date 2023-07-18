@@ -8,12 +8,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomePage
-    },
-    {
-      path: '/day/:date',
-      name: 'singleDay',
-
-      component: () => import('../views/SingleDay.vue')
     }
   ]
 })

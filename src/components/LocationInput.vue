@@ -59,19 +59,19 @@ watch(locationName, (newValue: string) => {
 <style lang="scss" scoped>
 .location-input {
   position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   max-width: 360px;
-  margin: 0 auto;
-  padding: 20px 15px 0;
   height: 60px;
+  padding: 20px 15px 0;
+  margin: 0 auto;
   transition: transform 0.3s linear;
-  z-index: 10;
   transform: translateY(calc(50vh - 60px));
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 400px;
   }
 
@@ -83,20 +83,21 @@ watch(locationName, (newValue: string) => {
     }
   }
 }
-.input {
-  background: transparent;
-  border-bottom: 1px solid darkslategrey;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  font-size: 20px;
-  padding: 2px 10px;
-  color: #fff;
-  max-width: 220px;
 
-  @media (min-width: 768px) {
-    font-size: 24px;
+.input {
+  max-width: 220px;
+  padding: 2px 10px;
+  font-size: 20px;
+  color: #fff;
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid darkslategrey;
+  border-left: none;
+
+  @media (width >= 768px) {
     max-width: 250px;
+    font-size: 24px;
   }
 
   &:focus {
@@ -108,16 +109,16 @@ watch(locationName, (newValue: string) => {
   position: relative;
 
   &::after {
-    content: '';
-    display: block;
     position: absolute;
-    margin-top: -1px;
-    height: 1px;
+    display: block;
     width: 100%;
+    height: 1px;
+    margin-top: -1px;
+    content: '';
     background: #fff;
+    transition: transform 0.25s linear;
     transform: scaleX(0);
     transform-origin: bottom center;
-    transition: transform 0.25s linear;
   }
 
   &.is-active::after {
@@ -133,17 +134,17 @@ watch(locationName, (newValue: string) => {
 }
 
 .btn {
-  background: transparent;
-  border: 1px solid darkslategrey;
+  padding: 10px 15px;
   font-size: 18px;
   color: #8f8f8f;
-  transition: all 0.2s linear;
   cursor: pointer;
-  padding: 10px 15px;
+  background: transparent;
+  border: 2px solid darkslategrey;
+  transition: all 0.2s linear;
 
   &:hover {
-    border: 1px solid #fff;
     color: #fff;
+    border: 2px solid #fff;
   }
 }
 

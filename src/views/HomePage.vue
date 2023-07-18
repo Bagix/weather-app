@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { useWeatherStore } from '@/stores/weather'
 import LocationInput from '@/components/LocationInput.vue'
-import DailyWeatherCard from '@/components/DailyWeatherCard.vue'
+import ShortCurrentWeather from '@/components/ShortCurrentWeather.vue'
+import ShortDailyWeatherCard from '@/components/ShortDailyWeatherCard.vue'
+import DailyWeatherModal from '@/components/DailyWeatherModal.vue'
+import { ref } from 'vue'
 
 const store = useWeatherStore()
+const forecastDate = ref<string>('')
 
 function getForecast(): void {
   store.getForecast()
+}
+
+function toggleDailyWeather(date?: string): void {
+  forecastDate.value = date ?? ''
+}
+
+function beforeSlideUp(): void {
+  document.body.classList.add('overflow-hidden')
+}
+
+function afterSlideDown(): void {
+  document.body.classList.remove('overflow-hidden')
 }
 </script>
 
@@ -15,52 +31,79 @@ function getForecast(): void {
 
   <Transition name="fade">
     <div v-if="!store.error && store.currentWeather" class="container">
-      <div v-if="store.location" class="location">
-        <p>Contry: {{ store.location.country }}</p>
-      </div>
-      <div v-if="store.currentWeather" class="weather">
-        <img :src="store.currentWeather.condition.icon" />
-        <p>{{ store.currentWeather.temp_c }} / {{ store.currentWeather.condition.text }}</p>
-      </div>
+      <ShortCurrentWeather />
 
       <button class="forecast-btn" @click="getForecast">3 days forecast</button>
 
       <div class="forecast-container">
         <TransitionGroup name="drop">
           <template v-if="store.forecast">
-            <DailyWeatherCard
+            <ShortDailyWeatherCard
               v-for="forecast in store.forecast"
               :key="forecast.date"
               :dayilyWeather="forecast"
+              @click="toggleDailyWeather(forecast.date)"
             />
           </template>
         </TransitionGroup>
       </div>
     </div>
   </Transition>
+  <Transition name="slide-up" @before-enter="beforeSlideUp" @after-leave="afterSlideDown">
+    <DailyWeatherModal v-if="forecastDate" @close="toggleDailyWeather" :date="forecastDate" />
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 1366px;
   padding: 0 16px;
   margin: 10vh auto 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 
-  @media (min-width: 1366px) {
+  @media (width >= 1366px) {
     margin-top: 20vh;
   }
 }
 
-.location,
-.weather {
-  text-align: center;
+.forecast-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 0;
+  margin-top: 32px;
+  overflow: hidden;
+
+  @media (width >= 768px) {
+    flex-direction: row;
+  }
+
+  @media (width >= 1366px) {
+    margin-top: 15vh;
+  }
 }
 
+.forecast-btn {
+  padding: 10px 15px;
+  margin-top: 16px;
+  font-size: 16px;
+  color: #8f8f8f;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid darkslategrey;
+  transition: all 0.2s linear;
+
+  &:hover {
+    color: #fff;
+    border: 2px solid #fff;
+  }
+}
+
+// Transitions
 .fade-enter-active {
   transition: opacity 0.3s ease-out 0.4s;
 }
@@ -69,37 +112,14 @@ function getForecast(): void {
   opacity: 0;
 }
 
-.forecast-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 32px;
-  overflow: hidden;
-  padding: 15px 0;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-
-  @media (min-width: 1366px) {
-    margin-top: 15vh;
-  }
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 1s ease-out;
 }
 
-.forecast-btn {
-  border: 1px solid darkslategrey;
-  background: transparent;
-  padding: 10px 15px;
-  font-size: 16px;
-  color: #8f8f8f;
-  cursor: pointer;
-  transition: all 0.2s linear;
-  margin-top: 16px;
-
-  &:hover {
-    border: 1px solid #fff;
-    color: #fff;
-  }
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(130%);
 }
 
 .drop-enter-active {
@@ -110,7 +130,7 @@ function getForecast(): void {
   transform: translateY(-125%);
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
   .drop-enter-from:nth-child(2),
   .drop-enter-from:nth-child(3) {
     opacity: 0;
@@ -118,6 +138,9 @@ function getForecast(): void {
   }
 }
 
+// Loop for transition delay
+
+/* stylelint-disable-next-line at-rule-no-unknown */
 @for $i from 1 through 3 {
   .drop-enter-active:nth-child(#{$i}n) {
     transition-delay: #{$i * 0.5}s;

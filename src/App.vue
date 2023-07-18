@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import HomePage from './views/HomePage.vue'
 import { useWeatherStore } from './stores/weather'
 import { onMounted } from 'vue'
 

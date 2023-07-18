@@ -12,7 +12,7 @@ function getDate(date: string): string {
 </script>
 
 <template>
-  <a :href="`./day/${dayilyWeather.date}`" class="daily-weather-card">
+  <div href="`./day/${dayilyWeather.date}`" class="daily-weather-card">
     <div class="date">{{ getDate(dayilyWeather.date) }}</div>
     <div class="icon">
       <img :src="dayilyWeather.day.condition.icon" />
@@ -20,7 +20,7 @@ function getDate(date: string): string {
     <div class="temp">
       {{ dayilyWeather.day.avgtemp_c }}/ {{ dayilyWeather.day.condition.text }}
     </div>
-  </a>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -32,16 +32,16 @@ function getDate(date: string): string {
   width: 100%;
   padding: 16px;
   margin: 16px 0;
-  border: 1px solid darkslategrey;
-  box-shadow: 0 0 4px 0 darkslategrey;
-  border-radius: 5px;
-  transform: translateY(0);
-  background: #000;
   color: var(--color-text);
-  text-decoration: none;
+  cursor: pointer;
+  background: #000;
+  border: 2px solid darkslategrey;
+  border-radius: 5px;
+  box-shadow: 0 0 4px 0 darkslategrey;
   transition: box-shadow 0.2s linear;
+  transform: translateY(0);
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     margin: 0 16px;
   }
 

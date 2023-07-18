@@ -1,5 +1,9 @@
 @import './base.css';
 
+.overflow-hidden {
+  overflow-y: hidden;
+}
+
 .weather-1000 {
 }
 .weather-1003 {
