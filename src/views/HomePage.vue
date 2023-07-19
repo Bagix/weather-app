@@ -24,9 +24,11 @@ function afterSlideDown(): void {
     <div v-if="!store.error && store.currentWeather" class="container">
       <ShortCurrentWeather />
 
-      <ForecastButton />
-
+      <Transition name="fade-out">
+        <ForecastButton v-if="!store.forecast" class="forecast-btn" />
+      </Transition>
       <div class="forecast-container">
+        <div v-if="store.isLoadingForecast" class="loader">test</div>
         <TransitionGroup name="drop">
           <template v-if="store.forecast">
             <ShortDailyWeatherCard
@@ -84,6 +86,15 @@ function afterSlideDown(): void {
 
 .fade-enter-from {
   opacity: 0;
+}
+
+.fade-out-leave-active {
+  transition: all 0.2s linear;
+}
+
+.forecast-btn.fade-out-leave-to {
+  height: 0;
+  padding: 0;
 }
 
 .slide-up-enter-active,

@@ -13,7 +13,7 @@ function getDate(date: string): string {
 }
 
 function openDailyModal(date: string): void {
-  store.openDailyModal(date)
+  store.toggleDailyModal(date)
 }
 </script>
 

@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { config } from '@/config'
 import {
@@ -9,13 +9,16 @@ import {
 } from '@/Types'
 
 export const useWeatherStore = defineStore('weather', () => {
+  // ---------- STATE ----------
   const currentWeatherData = ref<IWeather>()
   const error = ref<string>('')
   const currentPosition = ref<string>('')
   const forecastData = ref<IDailyForecast[]>()
   const isDailyModalOpen = ref<boolean>(false)
   const forecastDate = ref<string>('')
+  const isLoadingForecast = ref<boolean>(false)
 
+  // ---------- GETTERS ----------
   const location = computed(
     (): IWeatherLocation | null => currentWeatherData.value?.location ?? null
   )
@@ -33,6 +36,7 @@ export const useWeatherStore = defineStore('weather', () => {
       forecastData.value?.find((item) => item.date === forecastDate.value) ?? null
   )
 
+  // ---------- METHODS ----------
   const weatherCodeClass = computed((): string => {
     const code = currentWeather?.value?.condition.code.toString() ?? ''
 
@@ -43,12 +47,13 @@ export const useWeatherStore = defineStore('weather', () => {
     return `weather-${code}`
   })
 
-  function openDailyModal(date: string): void {
-    isDailyModalOpen.value = true
-    forecastDate.value = date
-  }
+  function toggleDailyModal(date?: string): void {
+    if (date) {
+      isDailyModalOpen.value = true
+      forecastDate.value = date
+      return
+    }
 
-  function closeDailyModal(): void {
     isDailyModalOpen.value = false
     forecastDate.value = ''
   }
@@ -76,7 +81,10 @@ export const useWeatherStore = defineStore('weather', () => {
 
   async function loadForecast(): Promise<void> {
     try {
+      isLoadingForecast.value = true
       error.value = ''
+
+      await timeout(2000) // just for fun
 
       const response = await fetch(
         `https://api.weatherapi.com/v1/forecast.json?key=${config.api.key}&q=${currentPosition.value}&days=7`
@@ -91,7 +99,17 @@ export const useWeatherStore = defineStore('weather', () => {
       forecastData.value = data.forecast.forecastday
     } catch (e) {
       console.log(e)
+    } finally {
+      isLoadingForecast.value = false
     }
+  }
+
+  /**
+   *
+   * @param ms miliseconds to wait
+   */
+  function timeout(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   return {
@@ -103,9 +121,9 @@ export const useWeatherStore = defineStore('weather', () => {
     weatherCodeClass,
     locationName,
     isDailyModalOpen,
-    openDailyModal,
+    toggleDailyModal,
     dailyForecast,
-    closeDailyModal,
+    isLoadingForecast,
     error
   }
 })

@@ -4,7 +4,7 @@ import { useWeatherStore } from '@/stores/weather'
 const store = useWeatherStore()
 
 function close(): void {
-  store.closeDailyModal()
+  store.toggleDailyModal()
 }
 </script>
 
