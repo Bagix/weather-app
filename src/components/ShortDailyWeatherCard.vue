@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { type IDailyForecast } from '@/Types'
+import { useWeatherStore } from '@/stores/weather'
 
+const store = useWeatherStore()
 defineProps<{
   dayilyWeather: IDailyForecast
 }>()
@@ -9,10 +11,14 @@ function getDate(date: string): string {
   const newDate = new Date(date)
   return `${newDate.getDate()} ${newDate.toLocaleString('en-US', { month: 'short' })}`
 }
+
+function openDailyModal(date: string): void {
+  store.openDailyModal(date)
+}
 </script>
 
 <template>
-  <div href="`./day/${dayilyWeather.date}`" class="daily-weather-card">
+  <div class="daily-weather-card" @click="openDailyModal(dayilyWeather.date)">
     <div class="date">{{ getDate(dayilyWeather.date) }}</div>
     <div class="icon">
       <img :src="dayilyWeather.day.condition.icon" />

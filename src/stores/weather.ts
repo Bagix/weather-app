@@ -13,6 +13,8 @@ export const useWeatherStore = defineStore('weather', () => {
   const error = ref<string>('')
   const currentPosition = ref<string>('')
   const forecastData = ref<IDailyForecast[]>()
+  const isDailyModalOpen = ref<boolean>(false)
+  const forecastDate = ref<string>('')
 
   const location = computed(
     (): IWeatherLocation | null => currentWeatherData.value?.location ?? null
@@ -26,6 +28,11 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const forecast = computed((): IDailyForecast[] | null => forecastData.value ?? null)
 
+  const dailyForecast = computed(
+    (): IDailyForecast | null =>
+      forecastData.value?.find((item) => item.date === forecastDate.value) ?? null
+  )
+
   const weatherCodeClass = computed((): string => {
     const code = currentWeather?.value?.condition.code.toString() ?? ''
 
@@ -36,7 +43,17 @@ export const useWeatherStore = defineStore('weather', () => {
     return `weather-${code}`
   })
 
-  async function getCurrentWeather(position: string): Promise<void> {
+  function openDailyModal(date: string): void {
+    isDailyModalOpen.value = true
+    forecastDate.value = date
+  }
+
+  function closeDailyModal(): void {
+    isDailyModalOpen.value = false
+    forecastDate.value = ''
+  }
+
+  async function loadCurrentWeather(position: string): Promise<void> {
     try {
       error.value = ''
       currentPosition.value = position
@@ -57,7 +74,7 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
-  async function getForecast(): Promise<void> {
+  async function loadForecast(): Promise<void> {
     try {
       error.value = ''
 
@@ -80,11 +97,15 @@ export const useWeatherStore = defineStore('weather', () => {
   return {
     currentWeather,
     location,
-    getCurrentWeather,
-    getForecast,
+    loadCurrentWeather,
+    loadForecast,
     forecast,
     weatherCodeClass,
     locationName,
+    isDailyModalOpen,
+    openDailyModal,
+    dailyForecast,
+    closeDailyModal,
     error
   }
 })

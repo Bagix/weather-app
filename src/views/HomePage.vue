@@ -4,18 +4,9 @@ import LocationInput from '@/components/LocationInput.vue'
 import ShortCurrentWeather from '@/components/ShortCurrentWeather.vue'
 import ShortDailyWeatherCard from '@/components/ShortDailyWeatherCard.vue'
 import DailyWeatherModal from '@/components/DailyWeatherModal.vue'
-import { ref } from 'vue'
+import ForecastButton from '@/components/ForecastButton.vue'
 
 const store = useWeatherStore()
-const forecastDate = ref<string>('')
-
-function getForecast(): void {
-  store.getForecast()
-}
-
-function toggleDailyWeather(date?: string): void {
-  forecastDate.value = date ?? ''
-}
 
 function beforeSlideUp(): void {
   document.body.classList.add('overflow-hidden')
@@ -33,7 +24,7 @@ function afterSlideDown(): void {
     <div v-if="!store.error && store.currentWeather" class="container">
       <ShortCurrentWeather />
 
-      <button class="forecast-btn" @click="getForecast">3 days forecast</button>
+      <ForecastButton />
 
       <div class="forecast-container">
         <TransitionGroup name="drop">
@@ -42,7 +33,6 @@ function afterSlideDown(): void {
               v-for="forecast in store.forecast"
               :key="forecast.date"
               :dayilyWeather="forecast"
-              @click="toggleDailyWeather(forecast.date)"
             />
           </template>
         </TransitionGroup>
@@ -50,7 +40,7 @@ function afterSlideDown(): void {
     </div>
   </Transition>
   <Transition name="slide-up" @before-enter="beforeSlideUp" @after-leave="afterSlideDown">
-    <DailyWeatherModal v-if="forecastDate" @close="toggleDailyWeather" :date="forecastDate" />
+    <DailyWeatherModal v-if="store.isDailyModalOpen" />
   </Transition>
 </template>
 
@@ -83,23 +73,7 @@ function afterSlideDown(): void {
   }
 
   @media (width >= 1366px) {
-    margin-top: 15vh;
-  }
-}
-
-.forecast-btn {
-  padding: 10px 15px;
-  margin-top: 16px;
-  font-size: 16px;
-  color: #8f8f8f;
-  cursor: pointer;
-  background: transparent;
-  border: 2px solid darkslategrey;
-  transition: all 0.2s linear;
-
-  &:hover {
-    color: #fff;
-    border: 2px solid #fff;
+    margin-top: 10vh;
   }
 }
 
@@ -127,7 +101,7 @@ function afterSlideDown(): void {
 }
 
 .drop-enter-from {
-  transform: translateY(-125%);
+  transform: translateY(-150%);
 }
 
 @media (width <= 767px) {

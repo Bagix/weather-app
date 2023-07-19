@@ -19,7 +19,7 @@ async function checkWeather(): Promise<void> {
     return
   }
 
-  await store.getCurrentWeather(transformText(place.value))
+  await store.loadCurrentWeather(transformText(place.value))
 
   if (!store.error) {
     input.value.blur()
