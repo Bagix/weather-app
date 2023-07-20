@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UILoader from '@/components/UILoader.vue'
+
 import { useWeatherStore } from '@/stores/weather'
 
 const store = useWeatherStore()
@@ -11,6 +13,7 @@ function loadForecast(): void {
 <template>
   <button class="forecast-button" @click="loadForecast" :disabled="store.isLoadingForecast">
     3 days forecast
+    <UILoader v-if="store.isLoadingForecast" />
   </button>
 </template>
 
@@ -38,7 +41,7 @@ function loadForecast(): void {
   &:disabled {
     border: 2px solid rgb(43 43 43);
 
-    &::after {
+    &::before {
       position: absolute;
       top: 0;
       left: 0;

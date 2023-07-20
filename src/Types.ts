@@ -48,6 +48,7 @@ export interface ICurrentWeather {
 
 export interface IDailyForecast {
   date: string
+  date_epoch: number
   day: {
     maxtemp_c: number
     maxtemp_f: number

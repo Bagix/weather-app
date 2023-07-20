@@ -11,11 +11,13 @@ function close(): void {
 <template>
   <div class="daily-weather-modal">
     <div class="header">
-      <h1 class="location">{{ store.locationName }}</h1>
+      <h1 class="location">{{ store.locationName }} {{ store.dailyForecast?.date }}</h1>
       <div class="close" @click="close">X</div>
     </div>
-    <div class="content">
-      {{ store.dailyForecast }}
+    <div class="content" v-if="store.dailyForecast">
+      <div class="averages">
+        {{ store.dailyForecast }}
+      </div>
     </div>
   </div>
 </template>

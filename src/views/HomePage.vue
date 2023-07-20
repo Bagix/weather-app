@@ -28,7 +28,6 @@ function afterSlideDown(): void {
         <ForecastButton v-if="!store.forecast" class="forecast-btn" />
       </Transition>
       <div class="forecast-container">
-        <div v-if="store.isLoadingForecast" class="loader">test</div>
         <TransitionGroup name="drop">
           <template v-if="store.forecast">
             <ShortDailyWeatherCard
