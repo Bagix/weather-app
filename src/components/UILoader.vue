@@ -12,11 +12,10 @@
 .loader {
   position: absolute;
   top: 0;
-  left: 0;
   left: 50%;
   display: inline-block;
   width: 80px;
-  height: 100%;
+  height: 80px;
   margin-left: -40px;
 }
 
@@ -47,13 +46,13 @@
 @keyframes loader-adnimation {
   0% {
     top: 8px;
-    height: 32px;
+    height: 64px;
   }
 
   50%,
   100% {
     top: 24px;
-    height: 16px;
+    height: 32px;
   }
 }
 </style>

@@ -5,6 +5,7 @@ import ShortCurrentWeather from '@/components/ShortCurrentWeather.vue'
 import ShortDailyWeatherCard from '@/components/ShortDailyWeatherCard.vue'
 import DailyWeatherModal from '@/components/DailyWeatherModal.vue'
 import ForecastButton from '@/components/ForecastButton.vue'
+import UILoader from '@/components/UILoader.vue'
 
 const store = useWeatherStore()
 
@@ -27,7 +28,11 @@ function afterSlideDown(): void {
       <Transition name="fade-out">
         <ForecastButton v-if="!store.forecast" class="forecast-btn" />
       </Transition>
+
       <div class="forecast-container">
+
+        <UILoader v-if="store.isLoadingForecast" clas="test" />
+
         <TransitionGroup name="drop">
           <template v-if="store.forecast">
             <ShortDailyWeatherCard
@@ -37,10 +42,13 @@ function afterSlideDown(): void {
             />
           </template>
         </TransitionGroup>
+
       </div>
     </div>
   </Transition>
+
   <Transition name="slide-up" @before-enter="beforeSlideUp" @after-leave="afterSlideDown">
+
     <DailyWeatherModal v-if="store.isDailyModalOpen" />
   </Transition>
 </template>
@@ -61,10 +69,16 @@ function afterSlideDown(): void {
   }
 }
 
+.test.loader {
+  height: 80px;
+}
+
 .forecast-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 80px;
   padding: 15px 0;
   margin-top: 32px;
   overflow: hidden;
