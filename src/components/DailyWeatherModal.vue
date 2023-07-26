@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { useWeatherStore } from '@/stores/weather'
+import DailyWeatherDetailsCard from '@/components/DailyWeatherDetailsCard.vue'
 
 const store = useWeatherStore()
+const temperatureData = [
+  { title: 'Min. temp', data: store.dailyForecast?.day.mintemp_c },
+  { title: 'Avr. temp', data: store.dailyForecast?.day.avgtemp_c },
+  { title: 'Max. temp', data: store.dailyForecast?.day.maxtemp_c }
+]
+const windData = [{ title: 'Max. wind', data: store.dailyForecast?.day.maxwind_kph }]
+const humidityData = [{ title: 'Avr. humidity', data: store.dailyForecast?.day.avghumidity }]
 
 function close(): void {
   store.toggleDailyModal()
@@ -11,12 +19,20 @@ function close(): void {
 <template>
   <div class="daily-weather-modal">
     <div class="header">
-      <h1 class="location">{{ store.locationName }} {{ store.dailyForecast?.date }}</h1>
+      <h1 class="location">
+        {{ store.dailyForecast?.date }} {{ store.locationName }} ({{ store.location?.country }})
+      </h1>
       <div class="close" @click="close">X</div>
     </div>
     <div class="content" v-if="store.dailyForecast">
-      <div class="averages">
-        {{ store.dailyForecast }}
+      <div class="daily">
+        <img :src="store.dailyForecast.day.condition.icon" />
+        <p>{{ store.dailyForecast.day.condition.text }}</p>
+      </div>
+      <div class="details">
+        <DailyWeatherDetailsCard title="Temperature" :data="temperatureData" />
+        <DailyWeatherDetailsCard title="Wind" :data="windData" />
+        <DailyWeatherDetailsCard title="Humidity" :data="humidityData" />
       </div>
     </div>
   </div>
@@ -43,7 +59,7 @@ function close(): void {
   }
 }
 
-.header {
+.daily-weather-modal > .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,5 +81,38 @@ function close(): void {
   height: calc(100% - 70px);
   padding: 16px 24px;
   overflow-y: scroll;
+}
+
+.card {
+  width: 100%;
+  border: 1px solid darkslategray;
+  border-radius: 3px;
+
+  @media (width >= 768px) {
+    max-width: 350px;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .row {
+    padding: 10px;
+    border-bottom: 1px solid darkslategray;
+
+    &:last-child {
+      border: none;
+    }
+  }
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+
+  @media (width >= 768px) {
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
 }
 </style>

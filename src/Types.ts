@@ -109,3 +109,8 @@ export interface IHourForecast {
   gust_kph: number
   uv: number
 }
+
+export interface IDailyDetails {
+  title: string
+  data: number | undefined
+}
