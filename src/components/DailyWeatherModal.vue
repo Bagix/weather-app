@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useWeatherStore } from '@/stores/weather'
 import DailyWeatherDetailsCard from '@/components/DailyWeatherDetailsCard.vue'
+import WeatherChart from '@/components/WeatherChart.vue'
+import { Line } from 'vue-chartjs'
+import { ref } from 'vue'
+import type { IWeatherLineChart } from '@/Types'
 
 const store = useWeatherStore()
 const temperatureData = [
@@ -10,9 +14,51 @@ const temperatureData = [
 ]
 const windData = [{ title: 'Max. wind', data: store.dailyForecast?.day.maxwind_kph }]
 const humidityData = [{ title: 'Avr. humidity', data: store.dailyForecast?.day.avghumidity }]
+const isChartVisible = ref<boolean>(false)
+let chartData = ref<IWeatherLineChart>({ labels: [], datasets: [] })
+
+const data = {
+  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  datasets: [
+    {
+      label: 'Data One',
+      backgroundColor: '#ffffff',
+      data: [40, 39, 10, 40, 39, 80, 40],
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }
+  ]
+}
 
 function close(): void {
   store.toggleDailyModal()
+}
+
+function loadChart(): void {
+  if (!store.dailyForecast) {
+    return
+  }
+
+  let labels: string[] = []
+  let data: number[] = []
+
+  store.dailyForecast.hour.forEach((hour) => {
+    labels.push(hour.time.slice(11, 13))
+    data.push(hour.temp_c)
+  })
+
+  chartData.value = {
+    labels,
+    datasets: [
+      {
+        label: 'Temparature',
+        backgroundColor: '#ffffff',
+        data,
+        borderColor: '#2f4f4f',
+        tension: 0.1
+      }
+    ]
+  }
 }
 </script>
 
@@ -33,6 +79,15 @@ function close(): void {
         <DailyWeatherDetailsCard title="Temperature" :data="temperatureData" />
         <DailyWeatherDetailsCard title="Wind" :data="windData" />
         <DailyWeatherDetailsCard title="Humidity" :data="humidityData" />
+      </div>
+      <button @click="loadChart">Show Chart</button>
+      <div class="chart-container">
+        <WeatherChart
+          :data="chartData"
+          v-if="chartData.datasets.length"
+          xAxisText="Hour"
+          yAxisText="Temperature"
+        />
       </div>
     </div>
   </div>
@@ -78,7 +133,7 @@ function close(): void {
 }
 
 .content {
-  height: calc(100% - 70px);
+  height: calc(100% - 118px);
   padding: 16px 24px;
   overflow-y: scroll;
 }
@@ -114,5 +169,9 @@ function close(): void {
     flex-flow: row wrap;
     justify-content: space-between;
   }
+}
+
+.chart-container {
+  background-color: #f7f7f7;
 }
 </style>

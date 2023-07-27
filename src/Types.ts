@@ -71,7 +71,7 @@ export interface IDailyForecast {
     condition: IWeatherCondition
     uv: number
   }
-  hours: IHourForecast[]
+  hour: IHourForecast[]
 }
 
 export interface IHourForecast {
@@ -113,4 +113,15 @@ export interface IHourForecast {
 export interface IDailyDetails {
   title: string
   data: number | undefined
+}
+
+export interface IWeatherLineChart {
+  labels: string[]
+  datasets: {
+    label: string
+    backgroundColor: string
+    data: number[]
+    borderColor?: string
+    tension?: number
+  }[]
 }
