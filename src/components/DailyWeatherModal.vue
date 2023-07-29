@@ -2,8 +2,7 @@
 import { useWeatherStore } from '@/stores/weather'
 import DailyWeatherDetailsCard from '@/components/DailyWeatherDetailsCard.vue'
 import WeatherChart from '@/components/WeatherChart.vue'
-import { Line } from 'vue-chartjs'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import type { IWeatherLineChart } from '@/Types'
 
 const store = useWeatherStore()
@@ -15,27 +14,24 @@ const temperatureData = [
 const windData = [{ title: 'Max. wind', data: store.dailyForecast?.day.maxwind_kph }]
 const humidityData = [{ title: 'Avr. humidity', data: store.dailyForecast?.day.avghumidity }]
 const isChartVisible = ref<boolean>(false)
+const chart = ref<HTMLElement>()
 let chartData = ref<IWeatherLineChart>({ labels: [], datasets: [] })
-
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'Data One',
-      backgroundColor: '#ffffff',
-      data: [40, 39, 10, 40, 39, 80, 40],
-      borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1
-    }
-  ]
-}
 
 function close(): void {
   store.toggleDailyModal()
 }
 
-function loadChart(): void {
+async function toggleChart(): Promise<void> {
   if (!store.dailyForecast) {
+    return
+  }
+
+  ;(document.activeElement as HTMLElement)?.blur
+  console.log('document.activeElement', document.activeElement)
+
+  if (isChartVisible.value) {
+    document.querySelector('.content')?.scrollTo({ top: 0, behavior: 'smooth' })
+    isChartVisible.value = false
     return
   }
 
@@ -59,6 +55,10 @@ function loadChart(): void {
       }
     ]
   }
+
+  isChartVisible.value = true
+  await nextTick()
+  chart.value?.scrollIntoView({ behavior: 'smooth' })
 }
 </script>
 
@@ -80,15 +80,14 @@ function loadChart(): void {
         <DailyWeatherDetailsCard title="Wind" :data="windData" />
         <DailyWeatherDetailsCard title="Humidity" :data="humidityData" />
       </div>
-      <button @click="loadChart">Show Chart</button>
-      <div class="chart-container">
-        <WeatherChart
-          :data="chartData"
-          v-if="chartData.datasets.length"
-          xAxisText="Hour"
-          yAxisText="Temperature"
-        />
-      </div>
+
+      <button class="chart-btn" @click="toggleChart">Toggle Chart</button>
+
+      <Transition name="pop-up">
+        <div v-if="isChartVisible" ref="chart" class="chart-container">
+          <WeatherChart :data="chartData" xAxisText="Hour" yAxisText="Temperature" />
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -135,6 +134,7 @@ function loadChart(): void {
 .content {
   height: calc(100% - 118px);
   padding: 16px 24px;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
@@ -171,7 +171,67 @@ function loadChart(): void {
   }
 }
 
+.chart-btn {
+  width: 100%;
+  padding: 12px 24px;
+  margin: 20px 0;
+  font-size: 24px;
+  color: #8f8f8f;
+  cursor: pointer;
+  background: var(--color-background);
+  border: 2px solid darkslategrey;
+  transition: all 0.2s linear;
+
+  @media (width >= 768px) {
+    max-width: 300px;
+  }
+
+  &:hover {
+    @media (hover: hover) {
+      color: #fff;
+      border: 2px solid #fff;
+    }
+  }
+}
+
 .chart-container {
+  height: 300px;
   background-color: #f7f7f7;
+}
+
+.pop-up-enter-active {
+  animation: popin 0.75s linear 1;
+}
+
+.pop-up-leave-active {
+  animation: popout 0.25s linear 1;
+}
+
+@keyframes popin {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  75% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes popout {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
 }
 </style>
