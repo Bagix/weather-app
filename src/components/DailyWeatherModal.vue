@@ -7,12 +7,12 @@ import type { IWeatherLineChart } from '@/Types'
 
 const store = useWeatherStore()
 const temperatureData = [
-  { title: 'Min. temp', data: store.dailyForecast?.day.mintemp_c },
-  { title: 'Avr. temp', data: store.dailyForecast?.day.avgtemp_c },
-  { title: 'Max. temp', data: store.dailyForecast?.day.maxtemp_c }
+  { title: 'Min. temp:', data: store.dailyForecast?.day.mintemp_c },
+  { title: 'Avr. temp:', data: store.dailyForecast?.day.avgtemp_c },
+  { title: 'Max. temp:', data: store.dailyForecast?.day.maxtemp_c }
 ]
-const windData = [{ title: 'Max. wind', data: store.dailyForecast?.day.maxwind_kph }]
-const humidityData = [{ title: 'Avr. humidity', data: store.dailyForecast?.day.avghumidity }]
+const windData = [{ title: 'Max. wind:', data: store.dailyForecast?.day.maxwind_kph }]
+const humidityData = [{ title: 'Avr. humidity:', data: store.dailyForecast?.day.avghumidity }]
 const isChartVisible = ref<boolean>(false)
 const chart = ref<HTMLElement>()
 let chartData = ref<IWeatherLineChart>({ labels: [], datasets: [] })
@@ -81,7 +81,9 @@ async function toggleChart(): Promise<void> {
         <DailyWeatherDetailsCard title="Humidity" :data="humidityData" />
       </div>
 
-      <button class="chart-btn" @click="toggleChart">Toggle Chart</button>
+      <div class="btn-wrapper">
+        <button class="chart-btn" @click="toggleChart">Toggle Chart</button>
+      </div>
 
       <Transition name="pop-up">
         <div v-if="isChartVisible" ref="chart" class="chart-container">
@@ -135,7 +137,7 @@ async function toggleChart(): Promise<void> {
   height: calc(100% - 118px);
   padding: 16px 24px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .card {
@@ -161,6 +163,10 @@ async function toggleChart(): Promise<void> {
   }
 }
 
+.daily {
+  text-align: center;
+}
+
 .details {
   display: flex;
   flex-direction: column;
@@ -169,6 +175,11 @@ async function toggleChart(): Promise<void> {
     flex-flow: row wrap;
     justify-content: space-between;
   }
+}
+
+.btn-wrapper {
+  width: 100%;
+  text-align: center;
 }
 
 .chart-btn {

@@ -30,7 +30,6 @@ function afterSlideDown(): void {
       </Transition>
 
       <div class="forecast-container">
-
         <UILoader v-if="store.isLoadingForecast" clas="test" />
 
         <TransitionGroup name="drop">
@@ -42,13 +41,11 @@ function afterSlideDown(): void {
             />
           </template>
         </TransitionGroup>
-
       </div>
     </div>
   </Transition>
 
   <Transition name="slide-up" @before-enter="beforeSlideUp" @after-leave="afterSlideDown">
-
     <DailyWeatherModal v-if="store.isDailyModalOpen" />
   </Transition>
 </template>
